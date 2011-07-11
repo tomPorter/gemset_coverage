@@ -15,7 +15,7 @@ class GemCoverage
   end
 end
 
-$LOAD_PATH << '/Users/tporter/.rvm/lib'
+$LOAD_PATH << '~/.rvm/lib'
 require 'rvm'
 current_ruby = '1.9.2'
 parent_env = RVM.environment(current_ruby)
