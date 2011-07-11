@@ -6,7 +6,7 @@ class GemCoverage
     @gemset_versions = {}
   end
 
-  def add_gemset_version(gemset,*versions)
+  def add_gemset_version(gemset,versions)
     @gemset_versions[gemset] = versions 
   end
 
@@ -29,9 +29,6 @@ class GemEntry
 end
 
 def gem_list(ruby_version,gemset = '')
-  ## ToDo: currently returns list of strings in "gem_name (ver1, ver2, ver3)" format
-  ## ToDo: Need to break out into gem names and list of versions, then flesh out
-  ## ToDo: classes.
   if gemset == ''
     rvm_version = ruby_version
   else
