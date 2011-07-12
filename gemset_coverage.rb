@@ -55,9 +55,9 @@ require 'rvm'
 require 'optparse'
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: gemset_coverage.rb [options] RUBY_VERSION"
+  opts.banner = "Usage: gemset_coverage.rb [options] [RUBY_VERSION]\n       Defaults to RVM ruby version in use."
 
-  opts.on("-g", "--gem gema[,gemb,gemc]",Array, "Gems to look for across gemsets") do |gem_list|
+  opts.on("-g", "--gems gema[,gemb,gemc]",Array, "Gems to look for across gemsets") do |gem_list|
     options[:gems_to_list] = gem_list
   end
 
