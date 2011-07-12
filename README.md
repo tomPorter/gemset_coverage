@@ -5,5 +5,6 @@ Assumes you have RVM installed in '~/.rvm'
     Usage: gemset_coverage.rb [options] [RUBY_VERSION]
            Defaults to RVM ruby version in use.
         -g, --gems gema[,gemb,gemc]      Gems to look for across gemsets
+        -a, --all_gems                   Display all installed gems across all gemsets
         -v, --[no-]verbose               Run verbosely
 
