@@ -52,9 +52,26 @@ end
 
 $LOAD_PATH << '~/.rvm/lib'
 require 'rvm'
+require 'optparse'
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: gemset_coverage.rb [options] RUBY_VERSION"
+
+  opts.on("-g", "--gem gema[,gemb,gemc]",Array, "Gems to look for across gemsets") do |gem_list|
+    options[:gems_to_list] = gem_list
+  end
+
+  opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+    options[:verbose] = v
+  end
+end.parse!
+
+p options
+p ARGV
+
 gemset_coverage_hash = GemHash.new()
-current_ruby = '1.9.2'
-p current_ruby
+current_ruby = ARGV[0]
+p current_ruby if options[:verbose]
 gem_list(current_ruby).each do |g| 
   gem_entry = GemEntry.new()
   gem_entry.split_gem_entry(g)
@@ -63,13 +80,12 @@ end
 parent_env = RVM.environment(current_ruby)
 current_gemsets = parent_env.gemset_list[1..999]
 current_gemsets.each do |gemset|
-  p "#{current_ruby}@#{gemset}"
+  p "#{current_ruby}@#{gemset}" if options[:verbose]
   gem_list(current_ruby,gemset).each do |g| 
     gem_entry = GemEntry.new()
     gem_entry.split_gem_entry(g)
     gemset_coverage_hash.update_gem_coverage_hash(gem_entry,gemset)
   end 
 end
-#p gemset_coverage_hash
-p gemset_coverage_hash['activemodel']
+options[:gems_to_list].each {|g| p gemset_coverage_hash[g] }
 
