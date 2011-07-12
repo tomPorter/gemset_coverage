@@ -66,12 +66,17 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-p options
-p ARGV
+#p options
+#p ARGV
+
+if ARGV.size == 0
+  current_ruby =  RVM.current.environment_name
+else
+  current_ruby = ARGV[0]
+end
+p current_ruby if options[:verbose]
 
 gemset_coverage_hash = GemHash.new()
-current_ruby = ARGV[0]
-p current_ruby if options[:verbose]
 gem_list(current_ruby).each do |g| 
   gem_entry = GemEntry.new()
   gem_entry.split_gem_entry(g)
@@ -87,5 +92,11 @@ current_gemsets.each do |gemset|
     gemset_coverage_hash.update_gem_coverage_hash(gem_entry,gemset)
   end 
 end
-options[:gems_to_list].each {|g| p gemset_coverage_hash[g] }
+options[:gems_to_list].each do |g| 
+  if gemset_coverage_hash.has_key? g
+    p gemset_coverage_hash[g]
+  else
+    p "#{g} not found in any gemset"
+  end
+end
 
