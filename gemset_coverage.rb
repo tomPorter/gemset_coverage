@@ -54,8 +54,11 @@ $LOAD_PATH << '~/.rvm/lib'
 require 'rvm'
 require 'optparse'
 options = {}
+
 optparse = OptionParser.new do |opts|
-  opts.banner = "Usage: gemset_coverage.rb [options] [RUBY_VERSION]\n       Defaults to RVM ruby version in use."
+  opts.banner = %{Usage: gemset_coverage.rb [options] [RUBY_VERSION]
+       RUBY_VERSION defaults to current RVM ruby version in use.
+       Either '--all_gems' or '--gems' option is required.}
 
   opts.on("-g", "--gems gema[,gemb,gemc]",Array, "Gems to look for across gemsets") do |gem_list|
     options[:gems_to_list] = gem_list
@@ -65,7 +68,7 @@ optparse = OptionParser.new do |opts|
     options[:display_all_gems] = true
   end
 
-  opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+  opts.on("-v", "--[no-]verbose", "Run verbosely, display inspected gemsets") do |v|
     options[:verbose] = v
   end
 end
@@ -94,7 +97,7 @@ if ARGV.size == 0
 else
   current_ruby = ARGV[0]
 end
-puts current_ruby if options[:verbose]
+puts "Inspecting default gems for #{current_ruby}" if options[:verbose]
 
 gemset_coverage_hash = GemHash.new()
 gem_list(current_ruby).each do |g| 
@@ -105,7 +108,7 @@ end
 parent_env = RVM.environment(current_ruby)
 current_gemsets = parent_env.gemset_list[1..999]
 current_gemsets.each do |gemset|
-  puts "#{current_ruby}@#{gemset}" if options[:verbose]
+  puts "Inspecting gemset #{current_ruby}@#{gemset}" if options[:verbose]
   gem_list(current_ruby,gemset).each do |g| 
     gem_entry = GemEntry.new()
     gem_entry.split_gem_entry(g)
