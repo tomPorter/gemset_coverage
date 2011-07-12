@@ -99,11 +99,13 @@ end
 if options[:display_all_gems]
   gemset_coverage_hash.each_value {|g| p g }
 else
-  options[:gems_to_list].each do |g| 
-    if gemset_coverage_hash.has_key? g
-      p gemset_coverage_hash[g]
-    else
-      p "#{g} not found in any gemset"
+  if  options[:gems_to_list]
+    options[:gems_to_list].each do |g| 
+      if gemset_coverage_hash.has_key? g
+        p gemset_coverage_hash[g]
+      else
+        p "#{g} not found in any gemset"
+      end
     end
   end
 end
