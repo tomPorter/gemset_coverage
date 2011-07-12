@@ -1,4 +1,15 @@
 #!/usr/bin/env ruby
+class GemHash < Hash
+  def update_gem_coverage_hash(gem_entry,gemset)
+    if self.has_key? gem_entry.name
+      self[gem_entry.name].add_gemset_version(gemset,gem_entry.versions)
+    else
+      self[gem_entry.name] = GemCoverage.new(gem_entry.name)
+      self[gem_entry.name].add_gemset_version(gemset,gem_entry.versions)
+    end
+  end
+end
+
 class GemCoverage
   attr_accessor :name, :gemset_versions
   def initialize(name)
@@ -38,25 +49,16 @@ def gem_list(ruby_version,gemset = '')
   current_gems
 end
 
-def update_gem_coverage_hash(gc_hash,gem_entry,gemset)
-  if gc_hash.has_key? gem_entry.name
-    gc_hash[gem_entry.name].add_gemset_version(gemset,gem_entry.versions)
-  else
-    gc_hash[gem_entry.name] = GemCoverage.new(gem_entry.name)
-    gc_hash[gem_entry.name].add_gemset_version(gemset,gem_entry.versions)
-  end
-end
 
 $LOAD_PATH << '~/.rvm/lib'
 require 'rvm'
-gemset_coverage_hash = {}
+gemset_coverage_hash = GemHash.new()
 current_ruby = '1.9.2'
 p current_ruby
-#gem_list(current_ruby).each { |g| p "  #{g}" }
 gem_list(current_ruby).each do |g| 
   gem_entry = GemEntry.new()
   gem_entry.split_gem_entry(g)
-  update_gem_coverage_hash(gemset_coverage_hash,gem_entry,'default')
+  gemset_coverage_hash.update_gem_coverage_hash(gem_entry,'default')
 end
 parent_env = RVM.environment(current_ruby)
 current_gemsets = parent_env.gemset_list[1..999]
@@ -65,7 +67,7 @@ current_gemsets.each do |gemset|
   gem_list(current_ruby,gemset).each do |g| 
     gem_entry = GemEntry.new()
     gem_entry.split_gem_entry(g)
-    update_gem_coverage_hash(gemset_coverage_hash,gem_entry,gemset)
+    gemset_coverage_hash.update_gem_coverage_hash(gem_entry,gemset)
   end 
 end
 #p gemset_coverage_hash
