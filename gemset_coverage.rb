@@ -35,7 +35,7 @@ class GemEntry
 
   def split_gem_entry(line)
     @name, version_string = line.split(/\s/,2)
-    @versions = version_string[1..-2].split(',')
+    @versions = version_string[1..-2].split(/,\s/)
 	end
 end
 
@@ -59,6 +59,10 @@ OptionParser.new do |opts|
 
   opts.on("-g", "--gems gema[,gemb,gemc]",Array, "Gems to look for across gemsets") do |gem_list|
     options[:gems_to_list] = gem_list
+  end
+
+  opts.on("-a", "--all_gems","Display all installed gems across all gemsets") do |a|
+    options[:display_all_gems] = a
   end
 
   opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
@@ -92,11 +96,16 @@ current_gemsets.each do |gemset|
     gemset_coverage_hash.update_gem_coverage_hash(gem_entry,gemset)
   end 
 end
-options[:gems_to_list].each do |g| 
-  if gemset_coverage_hash.has_key? g
-    p gemset_coverage_hash[g]
-  else
-    p "#{g} not found in any gemset"
+if options[:display_all_gems]
+  gemset_coverage_hash.each_value {|g| p g }
+else
+  options[:gems_to_list].each do |g| 
+    if gemset_coverage_hash.has_key? g
+      p gemset_coverage_hash[g]
+    else
+      p "#{g} not found in any gemset"
+    end
   end
 end
+
 
