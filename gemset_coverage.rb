@@ -97,6 +97,11 @@ optparse = OptionParser.new do |opts|
   opts.on("-v", "--[no-]verbose", "Run verbosely, display inspected gemsets") do |v|
     options[:verbose] = v
   end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
 end
 
 begin                                                                                                                                                                                                             

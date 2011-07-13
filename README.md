@@ -7,5 +7,7 @@ Assumes you have RVM installed in '~/.rvm'
            Either '--all_gems' or '--gems' option is required.
         -g, --gems gema[,gemb,gemc]      Gems to look for across gemsets
         -a, --all_gems                   Display all installed gems across all gemsets
+        -c, --common                     Display gems found in all gemsets, NOT including default.
+        -d, --default_warning            Display warning when gems found in 'default'. (Installed outside of a gemset)
         -v, --[no-]verbose               Run verbosely, display inspected gemsets
-
+        -h, --help                       Show this message
