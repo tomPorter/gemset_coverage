@@ -162,10 +162,10 @@ if options[:display_common]
   puts "Gems found in all gemsets:"
   gemset_coverage_hash.flag_gems_found_in_all_gemsets(current_gemsets)
   common_gems = gemset_coverage_hash.each_value.find_all {|gce| gce.in_all_gemsets? }
-  common_gems.each {|g| p g }
+  common_gems.each {|g| puts g }
 end
 if options[:default_warning]
   puts "Gems found in default gem install location:"
   gems_in_default = gemset_coverage_hash.each_value.find_all {|gce| gce.gemsets_containing.include? 'default' }
-  gems_in_default.each {|g| p g }
+  gems_in_default.each {|g| puts g }
 end
