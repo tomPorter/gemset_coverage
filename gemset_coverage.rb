@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
-## ToDo:  Decide if a warning is needed when gems are found installed in 'default'
 ## ToDo:  Figure out how to handle GemHash.flag_gems_found_in_all_gemsets; should 'default' count or not?
+## ToDo:  Go over attr_accessor and decide what attributes need R/W and which just need R access.  Create setters if needed.
+## ToDo:  Review methods and determine if need '?' or '!' at end, what should methods return?
 
 class GemHash < Hash
   def update_gem_coverage_hash(gem_listing,gemset)
@@ -12,13 +13,9 @@ class GemHash < Hash
     end
   end
 
-	def flag_gems_found_in_all_gemsets(gemsets)
-	  self.each_value do |gc_entry|
-      if gemsets == gc_entry.gemsets_containing
-        gc_entry.in_all_gemsets = true
-      end
-    end	
-	end
+  def flag_gems_found_in_all_gemsets(gemsets)
+    self.each_value { |gc_entry| gc_entry.flag_in_all_gemsets gemsets }
+  end
 end
 
 class GemCoverageEntry
@@ -41,6 +38,12 @@ class GemCoverageEntry
 
   def in_all_gemsets?
     @in_all_gemsets
+  end
+
+  def flag_in_all_gemsets(gemsets)
+    if gemsets == @gemsets_containing
+      @in_all_gemsets = true
+    end
   end
 end
 
