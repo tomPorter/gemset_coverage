@@ -54,7 +54,7 @@ class GemListing
   def add_gem_versions(line)
     @name, version_string = line.split(/\s/,2)
     @versions = version_string[1..-2].split(/,\s/)
-	end
+  end
 end
 
 def gem_list(ruby_version,gemset = '')
@@ -67,7 +67,6 @@ def gem_list(ruby_version,gemset = '')
   current_gems
 end
 
-
 $LOAD_PATH << '~/.rvm/lib'
 require 'rvm'
 require 'optparse'
@@ -76,7 +75,7 @@ options = {}
 optparse = OptionParser.new do |opts|
   opts.banner = %{Usage: gemset_coverage.rb [options] [RUBY_VERSION]
        RUBY_VERSION defaults to current RVM ruby version in use.
-       Either '--all_gems' or '--gems' option is required.}
+       One of  '--all_gems', '--gems', '--common', or '--default_warning' is required.}
 
   opts.on("-g", "--gems gema[,gemb,gemc]",Array, "Gems to look for across gemsets") do |gem_list|
     options[:gems_to_list] = gem_list
@@ -96,6 +95,11 @@ optparse = OptionParser.new do |opts|
 
   opts.on("-v", "--[no-]verbose", "Run verbosely, display inspected gemsets") do |v|
     options[:verbose] = v
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
   end
 end
 
