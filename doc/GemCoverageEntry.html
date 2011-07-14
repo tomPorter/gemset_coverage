@@ -55,7 +55,7 @@
 			<div id="parent-class-section" class="section">
 				<h3 class="section-header">Parent</h3>
 				
-				<p class="link"><a href="Object.html">Object</a></p>
+				<p class="link">Object</p>
 				
 			</div>
 			
@@ -112,7 +112,7 @@
 				
 					<li><a href="./GemListing.html">GemListing</a></li>
 				
-					<li><a href="./Object.html">Object</a></li>
+					<li><a href="./GemsetGems.html">GemsetGems</a></li>
 				
 				</ul>
 				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
@@ -232,20 +232,22 @@ and what versions of the gem are installed in each gemset.
 
 				<div class="method-description">
 					
-					
+					<p>
+Requires a gem name and initializes instance variables.
+</p>
 					
 
 					
 					<div class="method-source-code"
 						id="new-source">
 <pre>
-    <span class="ruby-comment cmt"># File gemset_coverage.rb, line 83</span>
-83:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>)
-84:     <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
-85:     <span class="ruby-ivar">@gemset_versions</span> = {}
-86:     <span class="ruby-ivar">@in_all_gemsets</span> = <span class="ruby-keyword kw">false</span>
-87:     <span class="ruby-ivar">@gemsets_containing</span> = []
-88:   <span class="ruby-keyword kw">end</span></pre>
+    <span class="ruby-comment cmt"># File gemset_coverage.rb, line 84</span>
+84:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>)
+85:     <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+86:     <span class="ruby-ivar">@gemset_versions</span> = {}
+87:     <span class="ruby-ivar">@in_all_gemsets</span> = <span class="ruby-keyword kw">false</span>
+88:     <span class="ruby-ivar">@gemsets_containing</span> = []
+89:   <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -285,11 +287,11 @@ href="GemCoverageEntry.html">GemCoverageEntry</a>.
 					<div class="method-source-code"
 						id="add-gemset-versions-source">
 <pre>
-    <span class="ruby-comment cmt"># File gemset_coverage.rb, line 91</span>
-91:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_gemset_versions</span>(<span class="ruby-identifier">gemset</span>,<span class="ruby-identifier">versions</span>)
-92:     <span class="ruby-ivar">@gemset_versions</span>[<span class="ruby-identifier">gemset</span>] = <span class="ruby-identifier">versions</span>
-93:     <span class="ruby-ivar">@gemsets_containing</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">gemset</span> 
-94:   <span class="ruby-keyword kw">end</span></pre>
+    <span class="ruby-comment cmt"># File gemset_coverage.rb, line 92</span>
+92:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_gemset_versions</span>(<span class="ruby-identifier">gemset</span>,<span class="ruby-identifier">versions</span>)
+93:     <span class="ruby-ivar">@gemset_versions</span>[<span class="ruby-identifier">gemset</span>] = <span class="ruby-identifier">versions</span>
+94:     <span class="ruby-ivar">@gemsets_containing</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">gemset</span> 
+95:   <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -324,13 +326,13 @@ is found in all the gemsets.
 					<div class="method-source-code"
 						id="flag-in-all-gemsets-source">
 <pre>
-     <span class="ruby-comment cmt"># File gemset_coverage.rb, line 107</span>
-107:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">flag_in_all_gemsets</span>(<span class="ruby-identifier">gemsets</span>)
-108:     <span class="ruby-identifier">remaining</span> =  <span class="ruby-identifier">gemsets</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@gemsets_containing</span>
-109:     <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">remaining</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">remaining</span> <span class="ruby-operator">==</span> [<span class="ruby-value str">'default'</span>])  
-110:       <span class="ruby-ivar">@in_all_gemsets</span> = <span class="ruby-keyword kw">true</span>
-111:     <span class="ruby-keyword kw">end</span>
-112:   <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File gemset_coverage.rb, line 109</span>
+109:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">flag_in_all_gemsets</span>(<span class="ruby-identifier">gemsets</span>)
+110:     <span class="ruby-identifier">remaining</span> =  <span class="ruby-identifier">gemsets</span> <span class="ruby-operator">-</span> <span class="ruby-ivar">@gemsets_containing</span>
+111:     <span class="ruby-keyword kw">if</span> (<span class="ruby-identifier">remaining</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">remaining</span> <span class="ruby-operator">==</span> [<span class="ruby-value str">'default'</span>])  
+112:       <span class="ruby-ivar">@in_all_gemsets</span> = <span class="ruby-keyword kw">true</span>
+113:     <span class="ruby-keyword kw">end</span>
+114:   <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -363,10 +365,10 @@ Is gem found in all gemsets for this ruby instance?
 					<div class="method-source-code"
 						id="in-all-gemsets--source">
 <pre>
-     <span class="ruby-comment cmt"># File gemset_coverage.rb, line 101</span>
-101:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">in_all_gemsets?</span>
-102:     <span class="ruby-ivar">@in_all_gemsets</span>
-103:   <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File gemset_coverage.rb, line 103</span>
+103:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">in_all_gemsets?</span>
+104:     <span class="ruby-ivar">@in_all_gemsets</span>
+105:   <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
@@ -390,17 +392,20 @@ Is gem found in all gemsets for this ruby instance?
 
 				<div class="method-description">
 					
-					
+					<p>
+Returns a string representation of a <a
+href="GemCoverageEntry.html">GemCoverageEntry</a>
+</p>
 					
 
 					
 					<div class="method-source-code"
 						id="to-s-source">
 <pre>
-    <span class="ruby-comment cmt"># File gemset_coverage.rb, line 96</span>
-96:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>
-97:     <span class="ruby-node">&quot;#{@name}: #{@gemset_versions.inspect}&quot;</span>
-98:   <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File gemset_coverage.rb, line 98</span>
+ 98:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_s</span>
+ 99:     <span class="ruby-node">&quot;#{@name}: #{@gemset_versions.inspect}&quot;</span>
+100:   <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
