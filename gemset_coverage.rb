@@ -3,7 +3,7 @@
 ## ToDo:  Review methods and determine if need '?' or '!' at end, what should methods return?
 
 class GemHash < Hash
-  def update_gem_coverage_hash(gem_listing_line,gemset)
+  def update!(gem_listing_line,gemset)
     gem_listing = GemListing.new(gem_listing_line)
     if self.has_key? gem_listing.name
       self[gem_listing.name].add_gemset_versions(gemset,gem_listing.versions)
@@ -11,10 +11,12 @@ class GemHash < Hash
       self[gem_listing.name] = GemCoverageEntry.new(gem_listing.name)
       self[gem_listing.name].add_gemset_versions(gemset,gem_listing.versions)
     end
+    self
   end
 
-  def flag_gems_found_in_all_gemsets(gemsets)
+  def flag_common_gems!(gemsets)
     self.each_value { |gc_entry| gc_entry.flag_in_all_gemsets gemsets }
+    self
   end
 
   def list_all_gems()
@@ -36,7 +38,7 @@ class GemHash < Hash
   
   def list_common_gems(gemsets)
     puts "Gems found in all gemsets:"
-    self.flag_gems_found_in_all_gemsets(gemsets)
+    self.flag_common_gems!(gemsets)
     common_gems = self.each_value.find_all {|gce| gce.in_all_gemsets? }
     common_gems.each {|g| puts g }
   end  
@@ -166,7 +168,7 @@ gemset_coverage_hash = GemHash.new()
 
 puts "Inspecting default gems for #{current_ruby}" if options[:verbose]
 get_gem_list_for_gemset(current_ruby).each do |gem_listing_line| 
-  gemset_coverage_hash.update_gem_coverage_hash(gem_listing_line,'default')
+  gemset_coverage_hash.update!(gem_listing_line,'default')
 end
 
 parent_env = RVM.environment(current_ruby)
@@ -175,7 +177,7 @@ current_gemsets = parent_env.gemset_list[1..999]
 current_gemsets.each do |gemset|
   puts "Inspecting gemset #{current_ruby}@#{gemset}" if options[:verbose]
   get_gem_list_for_gemset(current_ruby,gemset).each do |gem_listing_line| 
-    gemset_coverage_hash.update_gem_coverage_hash(gem_listing_line,gemset)
+    gemset_coverage_hash.update!(gem_listing_line,gemset)
   end 
 end
 
