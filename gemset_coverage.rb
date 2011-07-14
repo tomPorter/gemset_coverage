@@ -152,8 +152,22 @@ end
 #++
 
 $LOAD_PATH << '~/.rvm/lib'
-require 'rvm'
-require 'optparse'
+['rvm','optparse'].each do |g|
+  begin 
+    require g
+  rescue LoadError => e
+    raise unless e.message.include? g
+    if g == 'rvm'
+      puts "Do you have RVM installed?  If not please do so."
+    else
+      puts "Required module not found, please install '#{g}'"
+    end
+    exit
+  end
+end
+
+#require 'rvm'
+#require 'optparse'
 options = {}
 
 optparse = OptionParser.new do |opts|
