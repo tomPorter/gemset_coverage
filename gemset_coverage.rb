@@ -3,7 +3,8 @@
 ## ToDo:  Review methods and determine if need '?' or '!' at end, what should methods return?
 
 class GemHash < Hash
-  def update_gem_coverage_hash(gem_listing,gemset)
+  def update_gem_coverage_hash(gem_listing_line,gemset)
+    gem_listing = GemListing.new(gem_listing_line)
     if self.has_key? gem_listing.name
       self[gem_listing.name].add_gemset_versions(gemset,gem_listing.versions)
     else
@@ -79,9 +80,10 @@ end
 
 class GemListing
   attr_accessor :name, :versions
-  def initialize()
+  def initialize(gem_listing_line)
     @name = ''
     @versions = []
+    add_gem_versions(gem_listing_line)
   end
 
   def add_gem_versions(line)
@@ -159,22 +161,21 @@ if ARGV.size == 0
 else
   current_ruby = ARGV[0]
 end
-puts "Inspecting default gems for #{current_ruby}" if options[:verbose]
 
 gemset_coverage_hash = GemHash.new()
-get_gem_list_for_gemset(current_ruby).each do |g| 
-  gem_listing = GemListing.new()
-  gem_listing.add_gem_versions(g)
-  gemset_coverage_hash.update_gem_coverage_hash(gem_listing,'default')
+
+puts "Inspecting default gems for #{current_ruby}" if options[:verbose]
+get_gem_list_for_gemset(current_ruby).each do |gem_listing_line| 
+  gemset_coverage_hash.update_gem_coverage_hash(gem_listing_line,'default')
 end
+
 parent_env = RVM.environment(current_ruby)
 current_gemsets = parent_env.gemset_list[1..999]
+
 current_gemsets.each do |gemset|
   puts "Inspecting gemset #{current_ruby}@#{gemset}" if options[:verbose]
-  get_gem_list_for_gemset(current_ruby,gemset).each do |g| 
-    gem_listing = GemListing.new()
-    gem_listing.add_gem_versions(g)
-    gemset_coverage_hash.update_gem_coverage_hash(gem_listing,gemset)
+  get_gem_list_for_gemset(current_ruby,gemset).each do |gem_listing_line| 
+    gemset_coverage_hash.update_gem_coverage_hash(gem_listing_line,gemset)
   end 
 end
 
