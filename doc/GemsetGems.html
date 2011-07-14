@@ -5,7 +5,7 @@
 <head>
 	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 
-	<title>Class: GemListing</title>
+	<title>Class: GemsetGems</title>
 
 	<link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
 
@@ -69,9 +69,7 @@
 				<h3 class="section-header">Methods</h3>
 				<ul class="link-list">
 					
-					<li><a href="#method-c-new">::new</a></li>
-					
-					<li><a href="#method-i-add_gem_versions">#add_gem_versions</a></li>
+					<li><a href="#method-c-gem_list">::gem_list</a></li>
 					
 				</ul>
 			</div>
@@ -117,11 +115,12 @@
 	</div>
 
 	<div id="documentation">
-		<h1 class="class">GemListing</h1>
+		<h1 class="class">GemsetGems</h1>
 
 		<div id="description">
 			<p>
-This class holds the gem name and installed versions for a gem.
+This class has one purpose: to find all gems in a ruby instance and an
+optional gemset. Only contains a class method.
 </p>
 
 		</div>
@@ -131,46 +130,6 @@ This class holds the gem name and installed versions for a gem.
 
 		<!-- Attributes -->
 		
-		<div id="attribute-method-details" class="method-section section">
-			<h3 class="section-header">Attributes</h3>
-
-			
-			<div id="name-attribute-method" class="method-detail">
-				<a name="name"></a>
-				
-				<a name="name="></a>
-				
-				<div class="method-heading attribute-method-heading">
-					<span class="method-name">name</span><span
-						class="attribute-access-type">[RW]</span>
-				</div>
-
-				<div class="method-description">
-				
-				
-				
-				</div>
-			</div>
-			
-			<div id="versions-attribute-method" class="method-detail">
-				<a name="versions"></a>
-				
-				<a name="versions="></a>
-				
-				<div class="method-heading attribute-method-heading">
-					<span class="method-name">versions</span><span
-						class="attribute-access-type">[RW]</span>
-				</div>
-
-				<div class="method-description">
-				
-				
-				
-				</div>
-			</div>
-			
-		</div>
-		
 
 		<!-- Methods -->
 		
@@ -178,13 +137,13 @@ This class holds the gem name and installed versions for a gem.
 			<h3 class="section-header">Public Class Methods</h3>
 
 		
-			<div id="new-method" class="method-detail ">
-				<a name="method-c-new"></a>
+			<div id="gem-list-method" class="method-detail ">
+				<a name="method-c-gem_list"></a>
 
 				<div class="method-heading">
 				
-					<span class="method-name">new</span><span
-						class="method-args">(gem_listing_line)</span>
+					<span class="method-name">gem_list</span><span
+						class="method-args">(ruby_version,gemset = '')</span>
 					<span class="method-click-advice">click to toggle source</span>
 				
 				</div>
@@ -192,64 +151,25 @@ This class holds the gem name and installed versions for a gem.
 				<div class="method-description">
 					
 					<p>
-Requires a gem listing line and initializes instance vars.
+Returns a list of installed gems for a given ruby instance and optionally a
+specified gemset.
 </p>
 					
 
 					
 					<div class="method-source-code"
-						id="new-source">
+						id="gem-list-source">
 <pre>
-     <span class="ruby-comment cmt"># File gemset_coverage.rb, line 121</span>
-121:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">gem_listing_line</span>)
-122:     <span class="ruby-ivar">@name</span> = <span class="ruby-value str">''</span>
-123:     <span class="ruby-ivar">@versions</span> = []
-124:     <span class="ruby-identifier">add_gem_versions</span>(<span class="ruby-identifier">gem_listing_line</span>)
-125:   <span class="ruby-keyword kw">end</span></pre>
-					</div>
-					
-				</div>
-
-				
-
-				
-			</div>
-
-		
-		</div>
-	
-		<div id="public-instance-method-details" class="method-section section">
-			<h3 class="section-header">Public Instance Methods</h3>
-
-		
-			<div id="add-gem-versions-method" class="method-detail ">
-				<a name="method-i-add_gem_versions"></a>
-
-				<div class="method-heading">
-				
-					<span class="method-name">add_gem_versions</span><span
-						class="method-args">(line)</span>
-					<span class="method-click-advice">click to toggle source</span>
-				
-				</div>
-
-				<div class="method-description">
-					
-					<p>
-Given a line produced by running &#8216;gem list&#8217; parses it into a
-gem name and  an array of installed versions.
-</p>
-					
-
-					
-					<div class="method-source-code"
-						id="add-gem-versions-source">
-<pre>
-     <span class="ruby-comment cmt"># File gemset_coverage.rb, line 129</span>
-129:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_gem_versions</span>(<span class="ruby-identifier">line</span>)
-130:     <span class="ruby-ivar">@name</span>, <span class="ruby-identifier">version_string</span> = <span class="ruby-identifier">line</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/\s/</span>,<span class="ruby-value">2</span>)
-131:     <span class="ruby-ivar">@versions</span> = <span class="ruby-identifier">version_string</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>].<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/,\s/</span>)
-132:   <span class="ruby-keyword kw">end</span></pre>
+     <span class="ruby-comment cmt"># File gemset_coverage.rb, line 139</span>
+139:   <span class="ruby-keyword kw">def</span> <span class="ruby-constant">GemsetGems</span>.<span class="ruby-identifier">gem_list</span>(<span class="ruby-identifier">ruby_version</span>,<span class="ruby-identifier">gemset</span> = <span class="ruby-value str">''</span>)
+140:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">gemset</span> <span class="ruby-operator">==</span> <span class="ruby-value str">''</span>
+141:       <span class="ruby-identifier">rvm_version</span> = <span class="ruby-identifier">ruby_version</span>
+142:     <span class="ruby-keyword kw">else</span>
+143:       <span class="ruby-identifier">rvm_version</span> = <span class="ruby-identifier">ruby_version</span> <span class="ruby-operator">+</span> <span class="ruby-value str">'@'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">gemset</span>
+144:     <span class="ruby-keyword kw">end</span>
+145:     <span class="ruby-identifier">current_gems</span> = <span class="ruby-constant">RVM</span>.<span class="ruby-identifier">environment</span>(<span class="ruby-node">&quot;#{rvm_version}&quot;</span>).<span class="ruby-identifier">run_command</span>(<span class="ruby-value str">'gem list'</span>)[<span class="ruby-value">1</span>].<span class="ruby-identifier">split</span>(<span class="ruby-regexp re">/\n/</span>)
+146:     <span class="ruby-identifier">current_gems</span>
+147:   <span class="ruby-keyword kw">end</span></pre>
 					</div>
 					
 				</div>
