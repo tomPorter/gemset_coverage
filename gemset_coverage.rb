@@ -16,6 +16,36 @@ class GemHash < Hash
   def flag_gems_found_in_all_gemsets(gemsets)
     self.each_value { |gc_entry| gc_entry.flag_in_all_gemsets gemsets }
   end
+
+  def list_all_gems()
+    puts "All Gems:"
+    self.sort.each {|k,g| puts g }
+  end
+  
+  def list_desired_gems(list_of_gems)
+    gem_list_string = list_of_gems.join(', ')
+    puts "Listing selected Gems: #{gem_list_string}"
+    list_of_gems.each do |g| 
+      if self.has_key? g
+        puts self[g]
+      else
+        puts "#{g} not found in any gemset"
+      end
+    end
+  end
+  
+  def list_common_gems(gemsets)
+    puts "Gems found in all gemsets:"
+    self.flag_gems_found_in_all_gemsets(gemsets)
+    common_gems = self.each_value.find_all {|gce| gce.in_all_gemsets? }
+    common_gems.each {|g| puts g }
+  end  
+  
+  def list_default_gems()
+    puts "Gems found in default gem install location:"
+    gems_in_default = self.each_value.find_all {|gce| gce.gemsets_containing.include? 'default' }
+    gems_in_default.each {|g| puts g }
+  end
 end
 
 class GemCoverageEntry
@@ -60,7 +90,7 @@ class GemListing
   end
 end
 
-def gem_list(ruby_version,gemset = '')
+def get_gem_list_for_gemset(ruby_version,gemset = '')
   if gemset == ''
     rvm_version = ruby_version
   else
@@ -69,37 +99,7 @@ def gem_list(ruby_version,gemset = '')
   current_gems = RVM.environment("#{rvm_version}").run_command('gem list')[1].split(/\n/)
   current_gems
 end
-
-def list_all_gems(gemset_hash)
-  puts "All Gems:"
-  gemset_hash.sort.each {|k,g| puts g }
-end
-
-def list_desired_gems(gemset_hash,gem_list)
-  gem_list_string = gem_list.join(', ')
-  puts "Listing selected Gems: #{gem_list_string}"
-  gem_list.each do |g| 
-    if gemset_hash.has_key? g
-      puts gemset_hash[g]
-    else
-      puts "#{g} not found in any gemset"
-    end
-  end
-end
-
-def list_common_gems(gemset_hash,gemsets)
-  puts "Gems found in all gemsets:"
-  gemset_hash.flag_gems_found_in_all_gemsets(gemsets)
-  common_gems = gemset_hash.each_value.find_all {|gce| gce.in_all_gemsets? }
-  common_gems.each {|g| puts g }
-end  
-
-def list_default_gems(gemset_hash)
-  puts "Gems found in default gem install location:"
-  gems_in_default = gemset_hash.each_value.find_all {|gce| gce.gemsets_containing.include? 'default' }
-  gems_in_default.each {|g| puts g }
-end
-
+  
 $LOAD_PATH << '~/.rvm/lib'
 require 'rvm'
 require 'optparse'
@@ -163,7 +163,7 @@ end
 puts "Inspecting default gems for #{current_ruby}" if options[:verbose]
 
 gemset_coverage_hash = GemHash.new()
-gem_list(current_ruby).each do |g| 
+get_gem_list_for_gemset(current_ruby).each do |g| 
   gem_listing = GemListing.new()
   gem_listing.add_gem_versions(g)
   gemset_coverage_hash.update_gem_coverage_hash(gem_listing,'default')
@@ -179,10 +179,7 @@ current_gemsets.each do |gemset|
   end 
 end
 
-list_all_gems(gemset_coverage_hash) if options[:display_all_gems] 
-
-list_desired_gems(gemset_coverage_hash,options[:gems_to_list]) if options[:gems_to_list]
-
-list_common_gems(gemset_coverage_hash,current_gemsets) if options[:display_common]
-
-list_default_gems(gemset_coverage_hash) if options[:default_warning]
+gemset_coverage_hash.list_all_gems if options[:display_all_gems] 
+gemset_coverage_hash.list_desired_gems(options[:gems_to_list]) if options[:gems_to_list]
+gemset_coverage_hash.list_common_gems(current_gemsets) if options[:display_common]
+gemset_coverage_hash.list_default_gems if options[:default_warning]
