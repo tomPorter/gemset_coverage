@@ -1,8 +1,26 @@
 #!/usr/bin/env ruby
-## ToDo:  Go over attr_accessor and decide what attributes need R/W and which just need R access.  Create setters if needed.
-## ToDo:  Review methods and determine if need '?' or '!' at end, what should methods return?
+# The program helps explore the gems found in the defined gemsets for an RVM ruby instance.
+#
+# * You can list all installed gems and which gemsets they are installed in using the --all_gems option. 
+#
+# * You can search all gemsets for specific gems using the --gems gema[,gemb,gemc] option.
+# * You can search for all gems installed for a ruby instance but NOT installed in a gemset using the --default_warning option.
+# * You can find any gems that occur in all gemsets using the --common option.
+#
+# Author::    Tom Porter  (mailto:thomas.porter@acm.org)
+# Copyright:: Copyright (c) 2011 Thomas Porter
+# License::   Distributes under the same terms as Ruby
+
+# This class implements a Hash that uses a gem name as a key, and stores the GemCoverageEntry for that gem name.
+# The GemCoverageEntry for a gem stores the gemsets a gem is found in and the versions of the gem
+# found in that gemset.
+#
+# Gems matching various conditions can be listed using the list_* methods.
 
 class GemHash < Hash
+
+  # The update! method takes a gem listing line of the kind produced by the 'gem list' command
+  # and adds or updates the GemCoverageEntry for a given gem name.
   def update!(gem_listing_line,gemset)
     gem_listing = GemListing.new(gem_listing_line)
     if self.has_key? gem_listing.name
@@ -14,16 +32,21 @@ class GemHash < Hash
     self
   end
 
+  # Flag all entries in the GemHash that are found in all gemsets for the ruby instance.
+  # If a gem is installed in all gemsets but not in the @global gemset, than it could be
+  # installed in the @global gemset instead.
   def flag_common_gems!(gemsets)
     self.each_value { |gc_entry| gc_entry.flag_in_all_gemsets gemsets }
     self
   end
-
+  
+	# List all gems installed across all gemsets, ordered alphabetically.
   def list_all_gems()
     puts "All Gems:"
     self.sort.each {|k,g| puts g }
   end
-  
+
+	# List the locations of the gems specified when using the --gems option.  
   def list_desired_gems(list_of_gems)
     gem_list_string = list_of_gems.join(', ')
     puts "Listing selected Gems: #{gem_list_string}"
@@ -35,21 +58,26 @@ class GemHash < Hash
       end
     end
   end
-  
-  def list_common_gems(gemsets)
+
+	# List all gems flagged as being found in all gemsets by the flag_common_gems! method.  
+  def list_common_gems(gemsets)                                           
     puts "Gems found in all gemsets:"
     self.flag_common_gems!(gemsets)
     common_gems = self.each_value.find_all {|gce| gce.in_all_gemsets? }
     common_gems.each {|g| puts g }
   end  
-  
-  def list_default_gems()
+
+	# List all gems found in the 'default' gemset, i.e. gems installed to the ruby instance, but
+	# not in a gemset.  
+  def list_default_gems()                                                               
     puts "Gems found in default gem install location:"
     gems_in_default = self.each_value.find_all {|gce| gce.gemsets_containing.include? 'default' }
     gems_in_default.each {|g| puts g }
   end
 end
 
+# This class contains information describing which gemsets a gem is found in
+# and what versions of the gem are installed in each gemset.
 class GemCoverageEntry
   attr_accessor :name, :gemset_versions, :in_all_gemsets, :gemsets_containing
   def initialize(name)
@@ -59,6 +87,7 @@ class GemCoverageEntry
     @gemsets_containing = []
   end
 
+	# Given a gemset name and an Array of installed versions, adds this to the GemCoverageEntry.
   def add_gemset_versions(gemset,versions)
     @gemset_versions[gemset] = versions
     @gemsets_containing << gemset 
@@ -68,10 +97,13 @@ class GemCoverageEntry
     "#{@name}: #{@gemset_versions.inspect}"
   end
 
+  # Is gem found in all gemsets for this ruby instance?
   def in_all_gemsets?
     @in_all_gemsets
   end
 
+	# Given a list of all gemsets for a ruby instance, sets @in_all_gemsets if
+	# the gem is found in all the gemsets.
   def flag_in_all_gemsets(gemsets)
     remaining =  gemsets - @gemsets_containing
     if (remaining.empty? or remaining == ['default'])  
@@ -80,6 +112,7 @@ class GemCoverageEntry
   end
 end
 
+# This class holds the gem name and installed versions for a gem.
 class GemListing
   attr_accessor :name, :versions
   def initialize(gem_listing_line)
@@ -88,12 +121,15 @@ class GemListing
     add_gem_versions(gem_listing_line)
   end
 
+	# Given a line produced by running 'gem list' parses it into a gem name and 
+	# an array of installed versions.
   def add_gem_versions(line)
     @name, version_string = line.split(/\s/,2)
     @versions = version_string[1..-2].split(/,\s/)
   end
 end
 
+# Returns a list of installed gems for a given ruby instance and optionally a specified gemset.
 def get_gem_list_for_gemset(ruby_version,gemset = '')
   if gemset == ''
     rvm_version = ruby_version
@@ -104,6 +140,9 @@ def get_gem_list_for_gemset(ruby_version,gemset = '')
   current_gems
 end
   
+# TODO Go over attr_accessor and decide what attributes need R/W and which just need R access.  Create setters if needed.
+# TODO Review methods and determine if need '?' or '!' at end, what should methods return?
+
 $LOAD_PATH << '~/.rvm/lib'
 require 'rvm'
 require 'optparse'
