@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-## ToDo:  Figure out how to handle GemHash.flag_gems_found_in_all_gemsets; should 'default' count or not?
 ## ToDo:  Go over attr_accessor and decide what attributes need R/W and which just need R access.  Create setters if needed.
 ## ToDo:  Review methods and determine if need '?' or '!' at end, what should methods return?
 
@@ -71,7 +70,8 @@ class GemCoverageEntry
   end
 
   def flag_in_all_gemsets(gemsets)
-    if gemsets == @gemsets_containing
+    remaining =  gemsets - @gemsets_containing
+    if (remaining.empty? or remaining == ['default'])  
       @in_all_gemsets = true
     end
   end
@@ -118,7 +118,7 @@ optparse = OptionParser.new do |opts|
     options[:display_all_gems] = true
   end
 
-  opts.on("-c", "--common","Display gems found in all gemsets, NOT including default.") do
+  opts.on("-c", "--common","Display gems found in all gemsets, whether in 'default' or not.") do
     options[:display_common] = true
   end
 
@@ -154,7 +154,6 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
   exit
 end
 
-
 if ARGV.size == 0
   current_ruby =  RVM.current.environment_name
 else
@@ -172,7 +171,7 @@ parent_env = RVM.environment(current_ruby)
 current_gemsets = parent_env.gemset_list[1..999]
 current_gemsets.each do |gemset|
   puts "Inspecting gemset #{current_ruby}@#{gemset}" if options[:verbose]
-  gem_list(current_ruby,gemset).each do |g| 
+  get_gem_list_for_gemset(current_ruby,gemset).each do |g| 
     gem_listing = GemListing.new()
     gem_listing.add_gem_versions(g)
     gemset_coverage_hash.update_gem_coverage_hash(gem_listing,gemset)
