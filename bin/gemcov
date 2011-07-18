@@ -29,7 +29,7 @@ end
 
 options = {}
 optparse = OptionParser.new do |opts|
-  opts.banner = %{Usage: gemset_coverage.rb [options] [RUBY_VERSION]
+  opts.banner = %{Usage: gemcov [options] [RUBY_VERSION]
        RUBY_VERSION defaults to current RVM ruby version in use.
        One of  '--all_gems', '--gems', '--common', or '--default_warning' is required.}
 
