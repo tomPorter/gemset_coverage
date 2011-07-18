@@ -1,7 +1,5 @@
-#--
-# TODO Go over attr_accessor and decide what attributes need R/W and which just need R access.  Create setters if needed.
-# TODO Review methods and determine if need '?' or '!' at end, what should methods return?
-#++
+# @todo Go over attr_accessor and decide what attributes need R/W and which just need R access.  Create setters if needed.
+# @todo Review methods and determine if need '?' or '!' at end, what should methods return?
 module GemCov
   # This class implements a Hash that uses a gem name as a key, and stores the GemCoverageEntry for that gem name.
   # The GemCoverageEntry for a gem stores the gemsets a gem is found in and the versions of the gem
