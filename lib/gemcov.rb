@@ -24,15 +24,6 @@ module GemCov
       self
     end
   
-    # Flag all entries in the GemHash that are found in all gemsets 
-    # for the ruby instance.
-    # If a gem is installed in all gemsets but not in the @global 
-    # gemset, then it could be installed in the @global gemset instead.
-    def flag_common_gems!(gemsets)
-      self.each_value { |gc_entry| gc_entry.flag_in_all_gemsets gemsets }
-      self
-    end
-    
     # List all gems installed across all gemsets, ordered alphabetically.
     def list_all_gems()
       puts "All Gems:"
@@ -52,11 +43,13 @@ module GemCov
       end
     end
   
-    # List all gems flagged as being found in all gemsets by flag_common_gems!  
+    # List all gems flagged as being found in all gemsets
+    # If in 'global' gemset, exclude from listing.
     def list_common_gems(gemsets)                                           
-      puts "Gems found in all gemsets:"
-      self.flag_common_gems!(gemsets)
-      common_gems = self.each_value.find_all {|gce| gce.in_all_gemsets? }
+      puts "Gems found in all gemsets, but not in 'global':"
+      common_gems = self.each_value.find_all do |gce| 
+				gce.in_all_gemsets_but_global? gemsets 
+			end
       common_gems.each {|g| puts g }
     end  
   
@@ -79,7 +72,6 @@ module GemCov
     def initialize(name)
       @name = name
       @gemset_versions = {}
-      @in_all_gemsets = false
       @gemsets_containing = []
     end
   
@@ -96,18 +88,18 @@ module GemCov
     end
   
     # Is gem found in all gemsets for this ruby instance?
-    def in_all_gemsets?
-      @in_all_gemsets
-    end
-  
-    # Given a list of all gemsets for a ruby instance, sets @in_all_gemsets
-    # if the gem is found in all the gemsets.
-    def flag_in_all_gemsets(gemsets)
+    def in_all_gemsets_but_global?(gemsets)
+			in_all_gemsets = false
       remaining =  gemsets - @gemsets_containing
       if (remaining.empty? or remaining == ['default'])  
-        @in_all_gemsets = true
+        in_all_gemsets = true
       end
+      if gemsets.include? 'global'
+				in_all_gemsets = false
+			end
+      in_all_gemsets
     end
+  
   end
   
   # This class holds the gem name and installed versions for a gem.
