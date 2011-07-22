@@ -91,13 +91,7 @@ module GemCov
     def in_all_gemsets_but_global?(gemsets)
       in_all_gemsets = false
       remaining =  gemsets - @gemsets_containing
-      if (remaining.empty? or remaining == ['default'])  
-        in_all_gemsets = true
-      end
-      if gemsets.include? 'global'
-        in_all_gemsets = false
-      end
-      in_all_gemsets
+      (remaining.empty? or remaining == ['default']) and (not gemsets.include? 'global')
     end
   
   end
