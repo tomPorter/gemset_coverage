@@ -48,8 +48,8 @@ module GemCov
     def list_common_gems(gemsets)                                           
       puts "Gems found in all gemsets, but not in 'global':"
       common_gems = self.each_value.find_all do |gce| 
-				gce.in_all_gemsets_but_global? gemsets 
-			end
+        gce.in_all_gemsets_but_global? gemsets 
+      end
       common_gems.each {|g| puts g }
     end  
   
@@ -89,14 +89,14 @@ module GemCov
   
     # Is gem found in all gemsets for this ruby instance?
     def in_all_gemsets_but_global?(gemsets)
-			in_all_gemsets = false
+      in_all_gemsets = false
       remaining =  gemsets - @gemsets_containing
       if (remaining.empty? or remaining == ['default'])  
         in_all_gemsets = true
       end
       if gemsets.include? 'global'
-				in_all_gemsets = false
-			end
+        in_all_gemsets = false
+      end
       in_all_gemsets
     end
   
