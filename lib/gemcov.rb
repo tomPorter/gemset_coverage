@@ -67,7 +67,7 @@ module GemCov
   # This class contains information describing which gemsets a gem 
   # is found in and what versions of the gem are installed in each gemset.
   class GemCoverageEntry
-    attr_accessor :name, :gemset_versions, :in_all_gemsets, :gemsets_containing
+    attr_accessor :name, :gemset_versions, :gemsets_containing
     # Requires a gem name and initializes instance variables.
     def initialize(name)
       @name = name
