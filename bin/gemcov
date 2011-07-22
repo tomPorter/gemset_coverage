@@ -78,10 +78,9 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
 end
 
 if ARGV.size == 0
-  ## FixMe: need to make sure this resets to bare ruby version, not with a '@mygemset' appended.
-  current_ruby =  RVM.current.environment_name
+  current_ruby =  RVM.current.environment_name.split('@')[0]
 else
-  current_ruby = ARGV[0]
+  current_ruby = ARGV[0].split('@')[0]
 end
 
 gemset_coverage_hash = GemCov::GemHash.new()
