@@ -125,8 +125,13 @@ module GemCov
       else
         rvm_version = ruby_version + '@' + gemset
       end
-      current_gems = RVM.environment("#{rvm_version}").run_command('gem list')[1].split(/\n/)
-      current_gems
+			## Need to find a way to do the following:
+			## '$> env GEM_PATH=$GEM_HOME gem list'
+			## Have to see how to muck with $GEM_HOME programattically
+      #current_gems = RVM.environment("#{rvm_version}").run_command('gem list')[1].split(/\n/)
+      cmd = "env GEM_PATH=$GEM_HOME gem list"
+			current_gems = RVM.environment("#{rvm_version}").run_command(cmd)[1].split(/\n/)
+      #current_gems
     end
   end  
 end
