@@ -24,12 +24,12 @@ module GemCov
       self
     end
   
-    # List all gems installed across all gemsets, ordered alphabetically.
+    # Returns a list of all gems installed across all gemsets, ordered alphabetically.
     def all_gems()
       self.sort.collect {|k,g| g }
     end
   
-    # List the locations of the gems specified when using the --gems option.  
+    # Returns a list of the locations of the gems specified when using the --gems option.  
     def desired_gems(list_of_gems)
       specified_gems = []
       list_of_gems.each do |g| 
@@ -43,7 +43,7 @@ module GemCov
 			specified_gems
     end
   
-    # List all gems flagged as being found in all gemsets
+    # Returns a list of all gems flagged as being found in all gemsets
     # If in 'global' gemset, exclude from listing.
     def common_gems(gemsets)                                           
       common_gems = self.each_value.find_all do |gce| 
@@ -51,7 +51,7 @@ module GemCov
       end
     end  
   
-    # List all gems found in the 'default' gemset, i.e. gems installed to 
+    # Returns a list of all gems found in the 'default' gemset, i.e. gems installed to 
     # the ruby instance, but not in a gemset.  
     def default_gems()                                                               
       puts "Gems found in default gem install location:"
