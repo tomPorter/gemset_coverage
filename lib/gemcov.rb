@@ -25,42 +25,39 @@ module GemCov
     end
   
     # List all gems installed across all gemsets, ordered alphabetically.
-    def list_all_gems()
-      puts "All Gems:"
-      self.sort.each {|k,g| puts g }
+    def all_gems()
+      self.sort.collect {|k,g| g }
     end
   
     # List the locations of the gems specified when using the --gems option.  
-    def list_desired_gems(list_of_gems)
-      gem_list_string = list_of_gems.join(', ')
-      puts "Listing selected Gems: #{gem_list_string}"
+    def desired_gems(list_of_gems)
+      specified_gems = []
       list_of_gems.each do |g| 
         if self.has_key? g
-          puts self[g]
+          specified_gems << self[g]
         else
-          puts "#{g} not found in any gemset"
+          specified_gems <<  "'#{g}' not found in any gemset"
         end
       end
+
+			specified_gems
     end
   
     # List all gems flagged as being found in all gemsets
     # If in 'global' gemset, exclude from listing.
-    def list_common_gems(gemsets)                                           
-      puts "Gems found in all gemsets, but not in 'global':"
+    def common_gems(gemsets)                                           
       common_gems = self.each_value.find_all do |gce| 
         gce.in_all_gemsets_but_global? gemsets 
       end
-      common_gems.each {|g| puts g }
     end  
   
     # List all gems found in the 'default' gemset, i.e. gems installed to 
     # the ruby instance, but not in a gemset.  
-    def list_default_gems()                                                               
+    def default_gems()                                                               
       puts "Gems found in default gem install location:"
       gems_in_default = self.each_value.find_all do |gce|
         gce.gemsets_containing.include? 'default'
       end
-      gems_in_default.each {|g| puts g }
     end
   end
   
