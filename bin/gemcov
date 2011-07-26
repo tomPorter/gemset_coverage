@@ -99,8 +99,17 @@ current_gemsets.each do |gemset|
     gemset_coverage_hash.update!(gem_listing_line,gemset)
   end 
 end
-
-gemset_coverage_hash.list_all_gems if options[:display_all_gems] 
-gemset_coverage_hash.list_desired_gems(options[:gems_to_list]) if options[:gems_to_list]
-gemset_coverage_hash.list_common_gems(current_gemsets) if options[:display_common]
-gemset_coverage_hash.list_default_gems if options[:default_warning]
+if options[:display_all_gems]  
+  puts "All Gems:"
+  gemset_coverage_hash.all_gems.each { |g| puts g }
+end
+if options[:gems_to_list] 
+ gem_list_string =  options[:gems_to_list].join(', ')
+ puts "Listing selected Gems: #{gem_list_string}"
+ gemset_coverage_hash.desired_gems(options[:gems_to_list]).each { |g| puts g }
+end
+if options[:display_common] 
+  puts "Gems found in all gemsets, but not in 'global':"
+  gemset_coverage_hash.common_gems(current_gemsets).each { |g| puts g }
+end
+gemset_coverage_hash.default_gems.each { |g| puts g } if options[:default_warning]
