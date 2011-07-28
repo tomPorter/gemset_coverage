@@ -1,13 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 module GemCov
-  describe "Gem Listing" do
-    it "should add gem versions" do
-      gemlisting = GemListing.new("a (1.0.0)")
-      gemlisting.name.should == 'a'
-      gemlisting.versions.should == ['1.0.0']
-    end
-  end
-  
   describe "Gem Coverage Entry" do
     it "A new instance should have a name" do 
       gce = GemCoverageEntry.new('aGem')
@@ -55,7 +47,7 @@ module GemCov
     it ".all_gemsets_but_global? should return 'false' when a gem exists only in 'global'" do 
       gce = GemCoverageEntry.new('aGem')
       versions = ['1.0.0']
-      my_name = 'global'
+     my_name = 'global'
       all_gemsets = ['global']
       gce.add_gemset_versions(my_name,versions)
       gce.in_all_gemsets_but_global?(all_gemsets).should == false
