@@ -14,12 +14,12 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "gc"
+  gem.name = "gemcov"
   gem.homepage = "http://github.com/tomPorter/gemset_coverage"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
-  gem.email = "tom.porter@solutionset.com"
+  gem.summary = %Q{gemcov allows inspection of all defined gemsets and the gems in them.}
+  gem.description = %Q{gemcov allows inspection of all defined gemsets and the gems in them.  Helps answer "Where do I have the 'foobar' gem installed?"}
+  gem.email = "thomas.porter@acm.org"
   gem.authors = ["Tom Porter"]
   # dependencies defined in Gemfile
 end
